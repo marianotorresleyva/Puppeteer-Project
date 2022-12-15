@@ -1,5 +1,12 @@
 import puppeteer  from "puppeteer";
 import login from "./login.js";
+import {typeList,typeVideo,typeText} from './contentOptions';
+let types = {
+    "media":typeVideo,
+    "document":typeText,
+    "list":typeList
+}
+
 (async ()=>{
     let {browser,page} = await login()
     await page.waitForTimeout(3000)
@@ -11,6 +18,22 @@ import login from "./login.js";
     await page.waitForTimeout(3000)
     await page.click("body > section.course > section > div.course-header-headline.bootcamp-banner-background-theme > div > div > div > a")
     console.log("on course")
+    //Logic of programming
+    while (url == "this URL") {
+        try {
+            await page.setRequestInterception(true) 
+            page.on("request", req =>{
+                const contentType = req.resourceType()
+                types(contentType)
+            })
+            // page.waitForSelector()
+            await page.click("body > section > section > header > div > div.task-body-header-actions > a")
+            await page.waitForTimeout(3000)
+        } catch (error) {
+            console.log("Course - Done"); 
+            await browser.close()
+        }
+    }
     await page.waitForTimeout(2000)
     await page.click("#video-player > button")
 
